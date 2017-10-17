@@ -1,0 +1,35 @@
+body, html {
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.col-4 {
+  text-align: center;
+  padding: 0px;
+  width: 35px;
+  height: 100px;
+  line-height: 100px;
+}
+
+.col-12 {
+  padding: 10px;
+}
+
+.rt {
+  border-right: 4px solid black;
+}
+
+.btm {
+  border-bottom: 4px solid black;
+}
+
+.btn {
+  cursor: pointer;
+  margin: 10px;
+}
