@@ -1,27 +1,21 @@
 var player = "X";
 var computer = "O";
 var turn = "Player";
-var spots = [".one",".two",".three",".four",".five",".six",".seven",".eight",".nine"];
+var spots = [".s1",".s2",".s3",".s4",".s5",".s6",".s7",".s8",".s9"];
 var board = [];
 
 function computerTurn(){
-  var randomNum = Math.floor(Math.random() * 8);
-  if($(spots[randomNum]).text() === ""){
-    $(spots[randomNum]).text(computer);
+  var spotsLeft = spots.filter(function(x){return $(x).text()==="";});
+  var randomNum = Math.floor(Math.random() * spotsLeft.length);
+  if(spotsLeft.length !== 0){
+    $(spotsLeft[randomNum]).text(computer);
     turn = "Player";
-  }
-  else if(board.indexOf("") !== -1){
-    computerTurn();
   }
   gameStatus();
 }
 
-function boardStatus(){
-  board = spots.map(function(x){return $(x).text();});
-}
-
 function gameStatus(){
-  boardStatus();
+  board = spots.map(function(x){return $(x).text();});
 
   var row1 = board[0] + board[1] + board[2];
   var row2 = board[3] + board[4] + board[5];
@@ -40,16 +34,14 @@ function gameStatus(){
     alert("O wins!");
     clearBoard();
   }
-  else if(board.indexOf("") !== -1){
+  else if(board.indexOf("") === -1){
     alert("Tied game!");
     clearBoard();
   }
 }
 
 function clearBoard(){
-  for(each in spots){
-    $(spots[each]).empty();
-  }
+    $("[class^='s']").empty();
 }
 
 $(document).ready(function(){
@@ -70,7 +62,7 @@ $(document).ready(function(){
     $(".board").show();
   });
 
-  $(".one, .two, .three, .four, .five, .six, .seven, .eight, .nine").click(function(){
+  $("[class^='s']").click(function(){
     if(turn === "Player" && $(this).text() === ""){
       $(this).text(player);
       turn = "Computer";

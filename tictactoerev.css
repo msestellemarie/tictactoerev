@@ -9,7 +9,7 @@ body, html {
   align-items: center;
 }
 
-.col-4 {
+[class^="s"] {
   text-align: center;
   padding: 0px;
   width: 35px;
