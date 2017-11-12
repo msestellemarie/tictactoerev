@@ -1,77 +1,84 @@
 var player = "X";
 var computer = "O";
 var currentTurn = "Player";
-var spots = [".s1",".s2",".s3",".s4",".s5",".s6",".s7",".s8",".s9"];
+var first = "Player";
+var compScore = 0;
+var playerScore = 0;
+var isWinner = false;
 
-function max(board, turn){
+function minimax(board, turn, operation, depth){
   var spotsLeft = board.reduce(function(accum,value,index){if(value===""){accum.push(index);}return accum},[]);
-  var maxArr = [];
-  if(spotsLeft.length === 0){
-    maxArr.push(score(gameStatus(board)));
-  }
-  for(each in spotsLeft){
+  var arr = [];
+  for(var each in spotsLeft){
     var currentBoard = board.slice(0);
     currentBoard[spotsLeft[each]] = turn;
-    var currentScore = score(gameStatus(currentBoard));
+    var currentScore = score(gameStatus(currentBoard)[0]);
     if(currentScore !== null){
-      maxArr.push(currentScore);
+      arr.push([currentScore, depth]);
     }
-    else if(currentScore === null && turn === computer){
-      maxArr.push(min(currentBoard, player)[0]);
+    else if(currentScore === null && turn === computer && operation === "max"){
+      arr.push(minimax(currentBoard, player, "min", depth+1));
     }
-    else if(currentScore === null && turn === player){
-      maxArr.push(min(currentBoard, computer)[0]);
+    else if(currentScore === null && turn === computer && operation === "min"){
+      arr.push(minimax(currentBoard, player, "max", depth+1));
     }
-  }
-  return [Math.max(...maxArr),spotsLeft[maxArr.indexOf(Math.max(...maxArr))]];
-}
-
-function min(board, turn){
-  var spotsLeft = board.reduce(function(accum,value,index){if(value===""){accum.push(index);}return accum},[]);
-  var minArr = [];
-  if(spotsLeft.length === 0){
-    minArr.push(score(gameStatus(board)));
-  }
-  for(each in spotsLeft){
-    var currentBoard = board.slice(0);
-    currentBoard[spotsLeft[each]] = turn;
-    var currentScore = score(gameStatus(currentBoard));
-    if(currentScore !== null){
-      minArr.push(currentScore);
+    else if(currentScore === null && turn === player && operation === "max"){
+      arr.push(minimax(currentBoard, computer, "min", depth+1));
     }
-    else if(currentScore === null && turn === computer){
-      minArr.push(max(currentBoard, player)[0]);
-    }
-    else if(currentScore === null && turn === player){
-      minArr.push(max(currentBoard, computer)[0]);
+    else if(currentScore === null && turn === player && operation === "min"){
+      arr.push(minimax(currentBoard, computer, "max", depth+1));
     }
   }
-  return [Math.min(...minArr),spotsLeft[minArr.indexOf(Math.min(...minArr))]];
+  if(operation === "max" && depth === 0){
+    var max = arr[0];
+    var maxIndex = spotsLeft[0];
+    for(each in arr){
+      if(arr[each][0] > max[0]){
+        max = arr[each];
+        maxIndex = spotsLeft[each];
+      }
+      else if(arr[each][0] === max[0] && arr[each][1] < max[1]){
+        max = arr[each];
+        maxIndex = spotsLeft[each];
+      }
+    }
+    return maxIndex;
+  }
+  else if(operation === "max" && depth !== 0){
+    var max = arr[0];
+    for(each in arr){
+      if(arr[each][0] > max[0]){
+        max = arr[each];
+      }
+    }
+    return max;
+  }
+  else {
+    var min = arr[0];
+    for(each in arr){
+      if(arr[each][0] < min[0]){
+        min = arr[each];
+      }
+    }
+    return min;
+  }
 }
 
 function computerTurn(board, turn){
-  var idealIndex = max(board, turn)[1];
+  var spots = [".s1",".s2",".s3",".s4",".s5",".s6",".s7",".s8",".s9"];
+  var numberSpots = spots.reduce(function(accum,value){if($(value).text() === ""){accum += 1;}return accum;},0);
+  if(numberSpots === 9){
+    first = currentTurn;
+  }
+  var idealIndex = minimax(board, turn, "max", 0);
   var idealMove = spots[idealIndex];
   $(idealMove).text(computer);
   board[idealIndex] = turn;
   currentTurn = "Player";
-  var winner = gameStatus(board);
-  if(winner === computer){
-    alert("Bummer, you lost.");
-    clearBoard();
-  }
-  else if(winner === player){
-    alert("Woo, you win!");
-    clearBoard();
-  }
-  else if(winner === "Tie"){
-    alert("It's a tie.")
-    clearBoard();
-  }
-
+  alertWinner(gameStatus(board));
 }
 
-function gameStatus(board){
+function gameStatus(board, game){
   var row1 = board[0] + board[1] + board[2];
   var row2 = board[3] + board[4] + board[5];
   var row3 = board[6] + board[7] + board[8];
@@ -81,50 +88,169 @@ function gameStatus(board){
   var dia1 = board[0] + board[4] + board[8];
   var dia2 = board[2] + board[4] + board[6];
   var winner = "";
+  var winningGame = [];
 
-  if(row1==="XXX" || row2==="XXX" || row3==="XXX" || col1==="XXX" || col2==="XXX" || col3==="XXX" || dia1==="XXX" || dia2==="XXX"){
+  if(row1==="XXX"){
     winner = "X";
+    winningGame = [0,1,2];
   }
-  else if(row1==="OOO" || row2==="OOO" || row3==="OOO" || col1==="OOO" || col2==="OOO" || col3==="OOO" || dia1==="OOO" || dia2==="OOO"){
+  else if(row2==="XXX"){
+    winner = "X";
+    winningGame = [3,4,5];
+  }
+  else if(row3==="XXX"){
+    winner = "X";
+    winningGame = [6,7,8];
+  }
+  else if(col1==="XXX"){
+    winner = "X";
+    winningGame = [0,3,6];
+  }
+  else if(col2==="XXX"){
+    winner = "X";
+    winningGame = [1,4,7];
+  }
+  else if(col3==="XXX"){
+    winner = "X";
+    winningGame = [2,5,8];
+  }
+  else if(dia1==="XXX"){
+    winner = "X";
+    winningGame = [0,4,8];
+  }
+  else if(dia2==="XXX"){
+    winner = "X";
+    winningGame = [2,4,6];
+  }
+  else if(row1==="OOO"){
     winner = "O";
+    winningGame = [0,1,2];
+  }
+  else if(row2==="OOO"){
+    winner = "O";
+    winningGame = [3,4,5];
+  }
+  else if(row3==="OOO"){
+    winner = "O";
+    winningGame = [6,7,8];
+  }
+  else if(col1==="OOO"){
+    winner = "O";
+    winningGame = [0,3,6];
+  }
+  else if(col2==="OOO"){
+    winner = "O";
+    winningGame = [1,4,7];
+  }
+  else if(col3==="OOO"){
+    winner = "O";
+    winningGame = [2,5,8];
+  }
+  else if(dia1==="OOO"){
+    winner = "O";
+    winningGame = [0,4,8];
+  }
+  else if(dia2==="OOO"){
+    winner = "O";
+    winningGame = [2,4,6];
   }
   else if(board.indexOf("") === -1){
     winner = "Tie"
   }
-  else {
-    winner = "";
-  }
-  return winner;
+  return [winner, winningGame];
 }
 
 function score(winner){
-  if(winner === computer){
-    return 1;
+  switch(winner){
+    case computer:
+      return 1;
+    case player:
+      return -1;
+    case "Tie":
+      return 0;
+    default:
+      return null;
   }
-  else if(winner === player){
-    return -1;
+}
+
+function alertWinner(status){
+  var spots = [".s1",".s2",".s3",".s4",".s5",".s6",".s7",".s8",".s9"];
+  var arrStyle = status[1];
+  for(each in arrStyle){
+    $(spots[arrStyle[each]]).addClass("win-style");
   }
-  else if(winner === "Tie"){
-    return 0;
-  }
-  else {
-    return null;
+  switch(status[0]){
+    case computer:
+      isWinner = true;
+      $(".score").hide();
+      $(".winner-col").text("Bummer, you lost 😳");
+      $(".winner").show();
+      compScore += 1;
+      $(".comp-score").text(compScore);
+      setTimeout(clearBoard,1000);
+      break;
+    case player:
+      isWinner = true;
+      $(".score").hide();
+      $(".winner-col").text("Congrats, you beat the unbeatable 🍕");
+      $(".winner").show();
+      playerScore += 1;
+      $(".player-score").text(playerScore);
+      setTimeout(clearBoard,1000);
+      break;
+    case "Tie":
+      isWinner = true;
+      $(".score").hide();
+      $(".winner-col").text("Tied game 😺")
+      $(".winner").show();
+      setTimeout(clearBoard,1000);
+      break;
   }
 }
 
 function clearBoard(){
-    $("[class^='s']").empty();
+  isWinner = false;
+  $("[class^='s']").empty();
+  $("[class^='s']").removeClass("win-style");
+  $(".winner").hide();
+  $(".score").show();
+  var spots = [".s1",".s2",".s3",".s4",".s5",".s6",".s7",".s8",".s9"];
+  var currentBoard = spots.map(function(x){return $(x).text();});
+  if(first === "Player"){
+    currentTurn = "Computer";
+    first = "";
+    computerTurn(currentBoard,computer);
+  }
+  else if(first === "Computer"){
+    currentTurn = "Player";
+    first = "";
+  }
 }
 
 $(document).ready(function(){
   $(".board").hide();
+  $(".score").hide();
+  $(".winner").hide();
   $(".settings").show();
+
+  $(".reset").click(function(){
+    $("[class^='s']").empty();
+    $(".board").hide();
+    $(".score").hide();
+    $(".settings").show();
+    compScore = 0;
+    playerScore = 0;
+    currentTurn = "Player";
+    $(".comp-score").text(compScore);
+    $(".player-score").text(playerScore);
+  });
 
   $(".X").click(function(){
     player = "X";
     computer = "O";
     $(".settings").hide();
     $(".board").show();
+    $(".score").show();
   });
 
   $(".O").click(function(){
@@ -132,30 +258,26 @@ $(document).ready(function(){
     computer = "X";
     $(".settings").hide();
     $(".board").show();
+    $(".score").show();
   });
 
   $("[class^='s']").click(function(){
-    if(currentTurn === "Player" && $(this).text() === ""){
+    var spots = [".s1",".s2",".s3",".s4",".s5",".s6",".s7",".s8",".s9"];
+    var numberSpots = spots.reduce(function(accum,value){if($(value).text() === ""){accum += 1;}return accum;},0);
+    if(numberSpots === 9){
+      first = currentTurn;
+    }
+    if(currentTurn === "Player" && $(this).text() === "" && isWinner === false){
       $(this).text(player);
       currentTurn = "Computer";
       var currentBoard = spots.map(function(x){return $(x).text();});
       var winner = gameStatus(currentBoard);
-      if(winner !== ""){
-        switch(winner){
-          case computer:
-            alert("The computer wins!");
-            break;
-          case player:
-            alert("You win!");
-            break;
-          case "Tie":
-            alert("Tied game!");
-            break;
-        }
-        clearBoard();
+      alertWinner(winner);
+      if(winner[0] === ""){
+        setTimeout(function(){
+          computerTurn(currentBoard, computer);
+        },500);
       }
     }
-    var currentBoard = spots.map(function(x){return $(x).text();});
-    computerTurn(currentBoard, computer);
   });
 });
