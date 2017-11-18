@@ -6,15 +6,19 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,400" rel="stylesheet">
     <script src="https://use.fontawesome.com/2fe4f6d642.js"></script>
     <link rel="stylesheet" src="text/css" href="tictactoerev.css">
     <script src="tictactoerev.js"></script>
     <title>Tic Tac Toe</title>
-    <link rel="icon" type="img/png" href="">
+    <link rel="icon" type="img/png" href="tictactoerev.png">
   </head>
   <body>
     <div class="container">
+      <div class="row settings">
+        <div class="col-6 X">×</div>
+        <div class="col-6 O">⚬</div>
+      </div>
       <div class="row board">
         <div class="s1 col-4 btm rt"></div>
         <div class="s2 col-4 btm rt"></div>
@@ -26,27 +30,18 @@
         <div class="s8 col-4 rt"></div>
         <div class="s9 col-4"></div>
       </div>
-      <div class="row settings">
-        <div class="col-12">
-          <div class="text-center">How would you like to play?</div>
-        </div>
-        <div class="col-12 text-center">
-          <div class="btn btn-warning X">X</div>
-          <div class="btn btn-warning O">O</div>
-        </div>
-      </div>
       <div class="row winner">
         <div class="col-12">
-          <div class="text-center winner-col"></div>
+          <div class="text-center winner-msg"></div>
         </div>
-      </div>
-      <div class="row score">
-        <div class="col-3 text-center">comp: </div>
-        <div class="col-3 comp-score text-center">0</div>
-        <div class="col-3 text-center">player: </div>
-        <div class="col-3 player-score text-center">0</div>
-        <div class="col-12 text-center">
-          <div class="btn btn-warning reset">reset</div>
+        <div class="col-12 text-center emoji"></div>
+        <div class="col-4 offset-4">
+          <div class="row">
+            <div class="col-6 text-center winner-title">AI</div>
+            <div class="col-6 text-center winner-title">YOU</div>
+            <div class="col-6 text-center comp-score">0</div>
+            <div class="col-6 text-center player-score">0</div>
+          </div>
         </div>
       </div>
     </div>

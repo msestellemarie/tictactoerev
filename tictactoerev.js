@@ -1,5 +1,5 @@
-var player = "X";
-var computer = "O";
+var player = "×";
+var computer = "○";
 var currentTurn = "Player";
 var first = "Player";
 var compScore = 0;
@@ -90,72 +90,73 @@ function gameStatus(board, game){
   var winner = "";
   var winningGame = [];
 
-  if(row1==="XXX"){
-    winner = "X";
+  if(row1==="×××"){
+    winner = "×";
     winningGame = [0,1,2];
   }
-  else if(row2==="XXX"){
-    winner = "X";
+  else if(row2==="×××"){
+    winner = "×";
     winningGame = [3,4,5];
   }
-  else if(row3==="XXX"){
-    winner = "X";
+  else if(row3==="×××"){
+    winner = "×";
     winningGame = [6,7,8];
   }
-  else if(col1==="XXX"){
-    winner = "X";
+  else if(col1==="×××"){
+    winner = "×";
     winningGame = [0,3,6];
   }
-  else if(col2==="XXX"){
-    winner = "X";
+  else if(col2==="×××"){
+    winner = "×";
     winningGame = [1,4,7];
   }
-  else if(col3==="XXX"){
-    winner = "X";
+  else if(col3==="×××"){
+    winner = "×";
     winningGame = [2,5,8];
   }
-  else if(dia1==="XXX"){
-    winner = "X";
+  else if(dia1==="×××"){
+    winner = "×";
     winningGame = [0,4,8];
   }
-  else if(dia2==="XXX"){
-    winner = "X";
+  else if(dia2==="×××"){
+    winner = "×";
     winningGame = [2,4,6];
   }
-  else if(row1==="OOO"){
-    winner = "O";
+  else if(row1==="⚬⚬⚬"){
+    winner = "⚬";
     winningGame = [0,1,2];
   }
-  else if(row2==="OOO"){
-    winner = "O";
+  else if(row2==="⚬⚬⚬"){
+    winner = "⚬";
     winningGame = [3,4,5];
   }
-  else if(row3==="OOO"){
-    winner = "O";
+  else if(row3==="⚬⚬⚬"){
+    winner = "⚬";
     winningGame = [6,7,8];
   }
-  else if(col1==="OOO"){
-    winner = "O";
+  else if(col1==="⚬⚬⚬"){
+    winner = "⚬";
     winningGame = [0,3,6];
   }
-  else if(col2==="OOO"){
-    winner = "O";
+  else if(col2==="⚬⚬⚬"){
+    winner = "⚬";
     winningGame = [1,4,7];
   }
-  else if(col3==="OOO"){
-    winner = "O";
+  else if(col3==="⚬⚬⚬"){
+    winner = "⚬";
     winningGame = [2,5,8];
   }
-  else if(dia1==="OOO"){
-    winner = "O";
+  else if(dia1==="⚬⚬⚬"){
+    winner = "⚬";
     winningGame = [0,4,8];
   }
-  else if(dia2==="OOO"){
-    winner = "O";
+  else if(dia2==="⚬⚬⚬"){
+    winner = "⚬";
     winningGame = [2,4,6];
   }
   else if(board.indexOf("") === -1){
     winner = "Tie"
+    winningGame = [0,1,2,3,4,5,6,7,8];
   }
   return [winner, winningGame];
 }
@@ -182,29 +183,35 @@ function alertWinner(status){
   switch(status[0]){
     case computer:
       isWinner = true;
-      $(".score").hide();
-      $(".winner-col").text("Bummer, you lost 😳");
-      $(".winner").show();
+      var message = "YOU LOSE";
+      var emoji = "😳";
       compScore += 1;
-      $(".comp-score").text(compScore);
-      setTimeout(clearBoard,1000);
       break;
     case player:
       isWinner = true;
-      $(".score").hide();
-      $(".winner-col").text("Congrats, you beat the unbeatable 🍕");
-      $(".winner").show();
+      var message = "YOU WIN!!";
+      var emoji = "🍕"
       playerScore += 1;
-      $(".player-score").text(playerScore);
-      setTimeout(clearBoard,1000);
       break;
     case "Tie":
       isWinner = true;
-      $(".score").hide();
-      $(".winner-col").text("Tied game 😺")
-      $(".winner").show();
-      setTimeout(clearBoard,1000);
+      var message = "TIED GAME";
+      var emoji = "😺"
       break;
+  }
+  if(status[0] !== ""){
+    $(".winner-msg").text(message);
+    $(".emoji").text(emoji);
+    $(".comp-score").text(compScore);
+    $(".player-score").text(playerScore);
+    $(".board").fadeOut(2000,function(){
+      $(".winner").fadeIn(2000,function(){
+        clearBoard();
+        $(".winner").fadeOut(2000,function(){
+          $(".board").fadeIn(2000);
+        });
+      });
+    });
   }
 }
 
@@ -212,8 +219,6 @@ function clearBoard(){
   isWinner = false;
   $("[class^='s']").empty();
   $("[class^='s']").removeClass("win-style");
-  $(".winner").hide();
-  $(".score").show();
   var spots = [".s1",".s2",".s3",".s4",".s5",".s6",".s7",".s8",".s9"];
   var currentBoard = spots.map(function(x){return $(x).text();});
   if(first === "Player"){
@@ -229,7 +234,6 @@ function clearBoard(){
 
 $(document).ready(function(){
   $(".board").hide();
-  $(".score").hide();
   $(".winner").hide();
   $(".settings").show();
 
@@ -246,19 +250,17 @@ $(document).ready(function(){
   });
 
   $(".X").click(function(){
-    player = "X";
-    computer = "O";
+    player = "×";
+    computer = "⚬";
     $(".settings").hide();
     $(".board").show();
-    $(".score").show();
   });
 
   $(".O").click(function(){
-    player = "O";
-    computer = "X";
+    player = "⚬";
+    computer = "×";
     $(".settings").hide();
     $(".board").show();
-    $(".score").show();
   });
 
   $("[class^='s']").click(function(){
