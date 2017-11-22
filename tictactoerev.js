@@ -1,5 +1,5 @@
 var player = "×";
-var computer = "○";
+var computer = "o";
 var currentTurn = "Player";
 var first = "Player";
 var compScore = 0;
@@ -122,36 +122,36 @@ function gameStatus(board, game){
     winner = "×";
     winningGame = [2,4,6];
   }
-  else if(row1==="⚬⚬⚬"){
-    winner = "⚬";
+  else if(row1==="ooo"){
+    winner = "o";
     winningGame = [0,1,2];
   }
-  else if(row2==="⚬⚬⚬"){
-    winner = "⚬";
+  else if(row2==="ooo"){
+    winner = "o";
     winningGame = [3,4,5];
   }
-  else if(row3==="⚬⚬⚬"){
-    winner = "⚬";
+  else if(row3==="ooo"){
+    winner = "o";
     winningGame = [6,7,8];
   }
-  else if(col1==="⚬⚬⚬"){
-    winner = "⚬";
+  else if(col1==="ooo"){
+    winner = "o";
     winningGame = [0,3,6];
   }
-  else if(col2==="⚬⚬⚬"){
-    winner = "⚬";
+  else if(col2==="ooo"){
+    winner = "o";
     winningGame = [1,4,7];
   }
-  else if(col3==="⚬⚬⚬"){
-    winner = "⚬";
+  else if(col3==="ooo"){
+    winner = "o";
     winningGame = [2,5,8];
   }
-  else if(dia1==="⚬⚬⚬"){
-    winner = "⚬";
+  else if(dia1==="ooo"){
+    winner = "o";
     winningGame = [0,4,8];
   }
-  else if(dia2==="⚬⚬⚬"){
-    winner = "⚬";
+  else if(dia2==="ooo"){
+    winner = "o";
     winningGame = [2,4,6];
   }
   else if(board.indexOf("") === -1){
@@ -251,13 +251,13 @@ $(document).ready(function(){
 
   $(".X").click(function(){
     player = "×";
-    computer = "⚬";
+    computer = "o";
     $(".settings").hide();
     $(".board").show();
   });
 
   $(".O").click(function(){
-    player = "⚬";
+    player = "o";
     computer = "×";
     $(".settings").hide();
     $(".board").show();
